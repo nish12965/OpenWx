@@ -1,9 +1,9 @@
-
+// renderer.js
 // Runs in the renderer with no Node access. Uses window.api.getWeather(query) provided by preload.
 
 const q = (id) => document.getElementById(id);
 
-// Elements
+// DOM Elements
 const cityInput = q('cityInput');
 const searchBtn = q('searchBtn');
 const locateBtn = q('locateBtn');
@@ -22,54 +22,28 @@ const refreshBtn = q('refresh');
 const favList = q('favList');
 const errorEl = q('error');
 
+// State
 let isCelsius = true;
-let currentQuery = ''; // city or "lat,lon"
+let currentQuery = ''; 
 const FAVORITES_KEY = 'weatherapp.favs';
 let favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
 
-// show error
+// --- Helper Functions ---
+
 function showError(msg) {
   errorEl.textContent = msg;
   errorEl.classList.remove('hidden');
 }
 
-// hide error
 function hideError() {
   errorEl.textContent = '';
   errorEl.classList.add('hidden');
 }
 
-// Render favorites
-function renderFavs() {
-  favList.innerHTML = '';
-  favorites.forEach((c) => {
-    const li = document.createElement('li');
-    li.textContent = c;
-    const btn = document.createElement('button');
-    btn.textContent = 'Open';
-    btn.style.marginLeft = '8px';
-    btn.onclick = () => fetchAndRender(c);
-    li.appendChild(btn);
-    // quick remove on right click
-    li.oncontextmenu = (e) => {
-      e.preventDefault();
-      if (confirm(`Remove ${c} from favorites?`)) {
-        favorites = favorites.filter(x => x !== c);
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-        renderFavs();
-      }
-    };
-    favList.appendChild(li);
-  });
-}
-
-// Format temperature display (we always fetch metric from server and convert on client)
 function formatTemp(celsius) {
-  if (isCelsius) return `${Math.round(celsius)}°C`;
-  return `${Math.round(celsius * 9/5 + 32)}°F`;
+  return isCelsius ? `${Math.round(celsius)}°C` : `${Math.round(celsius * 9/5 + 32)}°F`;
 }
 
-// Change background based on condition and day/night
 function setDynamicBackground(text, isDay) {
   text = (text || '').toLowerCase();
   const body = document.body;
@@ -86,7 +60,33 @@ function setDynamicBackground(text, isDay) {
   }
 }
 
-// Render data from WeatherAPI's in json file
+// --- Favorites ---
+function renderFavs() {
+  favList.innerHTML = '';
+  favorites.forEach((c) => {
+    const li = document.createElement('li');
+    li.textContent = c;
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Open';
+    btn.style.marginLeft = '8px';
+    btn.onclick = () => fetchAndRender(c);
+    li.appendChild(btn);
+
+    li.oncontextmenu = (e) => {
+      e.preventDefault();
+      if (confirm(`Remove ${c} from favorites?`)) {
+        favorites = favorites.filter(x => x !== c);
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+        renderFavs();
+      }
+    };
+
+    favList.appendChild(li);
+  });
+}
+
+// --- Render Weather ---
 function renderWeather(data) {
   if (!data || !data.location || !data.current) {
     showError('No data to display.');
@@ -105,19 +105,17 @@ function renderWeather(data) {
   windEl.textContent = `${cur.wind_kph} km/h`;
   feelsEl.textContent = `Feels like ${formatTemp(cur.feelslike_c)}`;
 
-  // remember current query (Prefering city name for refresh)
   currentQuery = loc.name;
   card.classList.remove('hidden');
 
   setDynamicBackground(cur.condition.text, cur.is_day === 1);
 }
 
-// Fetch + render wrapper
+// --- Fetch + Render ---
 async function fetchAndRender(queryOrLatlon) {
   hideError();
   card.classList.add('hidden');
   try {
-    // query: city name like Delhi,Mumbai etc
     const res = await window.api.getWeather(queryOrLatlon);
     if (res.error) {
       showError(res.error);
@@ -129,7 +127,7 @@ async function fetchAndRender(queryOrLatlon) {
   }
 }
 
-// For geolocation: try navigator.geolocation first, if fails, call WeatherAPI with "auto:ip" fallback
+// --- Geolocation ---
 async function getLocationAndFetch() {
   hideError();
   if (navigator.geolocation) {
@@ -137,29 +135,39 @@ async function getLocationAndFetch() {
       const lat = pos.coords.latitude.toFixed(4);
       const lon = pos.coords.longitude.toFixed(4);
       fetchAndRender(`${lat},${lon}`);
-    }, (err) => {
-      // fallback: WeatherAPI accepts "auto:ip" as a query
-      fetchAndRender('auto:ip');
+    }, () => {
+      fetchAndRender('auto:ip'); // fallback
     }, { timeout: 8000 });
   } else {
     fetchAndRender('auto:ip');
   }
 }
 
-// Event wiring
+// --- Event Listeners ---
+let searchTimeout;
+cityInput.addEventListener('input', () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const txt = cityInput.value.trim();
+    if (txt) fetchAndRender(txt);
+  }, 500);
+});
+
 searchBtn.addEventListener('click', () => {
   const txt = cityInput.value.trim();
   if (!txt) { showError('Please enter a city name.'); return; }
   fetchAndRender(txt);
 });
+
 cityInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') searchBtn.click(); });
 locateBtn.addEventListener('click', getLocationAndFetch);
+
 toggleUnitBtn.addEventListener('click', () => {
   isCelsius = !isCelsius;
   toggleUnitBtn.textContent = `Switch to °${isCelsius ? 'F' : 'C'}`;
-  // re-render current values by fetching again if displayed
   if (currentQuery) fetchAndRender(currentQuery);
 });
+
 addFavBtn.addEventListener('click', () => {
   if (!currentQuery) { showError('No city to add.'); return; }
   if (!favorites.includes(currentQuery)) {
@@ -168,20 +176,18 @@ addFavBtn.addEventListener('click', () => {
     renderFavs();
   }
 });
+
 refreshBtn.addEventListener('click', () => {
   if (!currentQuery) { showError('Nothing to refresh yet.'); return; }
   fetchAndRender(currentQuery);
 });
 
-// init
+// --- Init ---
 renderFavs();
-
-
 window.addEventListener('DOMContentLoaded', () => {
   if (favorites.length > 0) {
     fetchAndRender(favorites[0]);
   } else {
-    
     getLocationAndFetch();
   }
 });
