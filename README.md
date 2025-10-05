@@ -22,10 +22,10 @@ It fetches real-time weather data .
 
 - 1.Download the latest OpenWx '.AppImage' from [Releases](https://github.com/nish12965/OpenWx/releases)
 - 2.Make it executable
-- '''bash
-- chmod +x OpenWx-1.0.0-x86_64.AppImage''' 
+- ```bash
+  chmod +x OpenWx-1.0.0-x86_64.AppImage```
 - 3.Run the App
-- ./OpenWx-1.0.0-x86_64.AppImage
+  ```./OpenWx-1.0.0-x86_64.AppImage```
 
 ### Windows
 
@@ -35,10 +35,10 @@ It fetches real-time weather data .
 
 ### If You want to run the app form source
 
-- 'git clone https://github.com/your-username/OpenWx.git'
-- 'cd OpenWx'
-- 'npm install'
-- 'npm run dev'
+- ```git clone https://github.com/your-username/OpenWx.git
+  cd OpenWx
+  npm install
+  npm run dev```
 
 
 ## Licence 
