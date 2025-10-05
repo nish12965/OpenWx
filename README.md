@@ -20,7 +20,7 @@ It fetches real-time weather data .
 ### Linux 
 #### Appimage (Recommended)
 
-- 1.Download the latest OpenWx '.AppImage' from [Releases](https://github.com/nish12965/OpenWx/releases)
+- 1.Download the latest OpenWx **'.AppImage'** from [Releases](https://github.com/nish12965/OpenWx/releases)
 - 2.Make it executable
 - ```bash
   chmod +x OpenWx-1.0.0-x86_64.AppImage```
@@ -30,15 +30,15 @@ It fetches real-time weather data .
 ### Windows
 
 #### Portable Exe
-- 1.Download the latest OpenWx '.exe(Portable)' from [Releases](https://github.com/nish12965/OpenWx/releases)
-- 2.Double-click the .exe to run — no installation needed.
+- Download the latest OpenWx **'.exe(Portable)'** from [Releases](https://github.com/nish12965/OpenWx/releases)
+- Double-click the **.exe** to run — no installation needed.
 
 ### If You want to run the app form source
 
-- ```git clone https://github.com/your-username/OpenWx.git
-  cd OpenWx
-  npm install
-  npm run dev```
+```git clone https://github.com/your-username/OpenWx.git```
+```cd OpenWx```
+```npm install```
+```npm run dev```
 
 
 ## Licence 
