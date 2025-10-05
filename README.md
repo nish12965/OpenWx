@@ -35,10 +35,10 @@ It fetches real-time weather data .
 
 ### If You want to run the app form source
 
-```git clone https://github.com/your-username/OpenWx.git```
-```cd OpenWx```
-```npm install```
-```npm run dev```
+- ```git clone https://github.com/your-username/OpenWx.git```
+- ```cd OpenWx```
+- ```npm install```
+- ```npm run dev```
 
 
 ## Licence 
