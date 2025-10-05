@@ -1,0 +1,226 @@
+/* App styel */
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Root */
+:root {
+  --bg: linear-gradient(135deg, #74ebd5, #acb6e5);
+  --glass: rgba(255, 255, 255, 0.12);
+  --glass-2: rgba(255, 255, 255, 0.18);
+  --accent: #6c5ce7;
+  --muted: rgba(255, 255, 255, 0.8);
+  --danger: #ff7675;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: #fff;
+  transition: background 0.6s ease;
+}
+
+/* APP container */
+.app-container {
+  width: 100%;
+  max-width: 460px;
+  background: var(--glass);
+  border-radius: 18px;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  letter-spacing: 0.2px;
+}
+
+
+.muted {
+  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.9rem;
+}
+
+/* Search section */
+.search {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.search-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.search-actions button {
+  background: var(--accent);
+  border: none;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Weather Card */
+.weather-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.weather-card .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-card img {
+  width: 86px;
+  height: 86px;
+}
+
+.title h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.small {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/*weather info */
+.main-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.temp {
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+
+.cond {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+  text-transform: capitalize;
+}
+
+/* details row */
+.details {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Favorites Section */
+.favorites h3 {
+  margin: 8px 0 6px 0;
+  font-size: 1rem;
+}
+
+#favList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#favList li {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.18s ease;
+}
+
+#favList li:hover {
+  transform: translateY(-2px);
+}
+
+/
+.footer {
+  font-size: 0.82rem;
+  text-align: center;
+  opacity: 0.9;
+  margin-top: 6px;
+}
+
+
+.error {
+  color: var(--danger);
+  margin-top: 8px;
+}
+
+.hidden {
+  display: none;
+}

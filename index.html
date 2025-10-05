@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app-container">
+    <header class="header">
+      <h1>Weather Dashboard</h1>
+      <div class="controls">
+        <button id="min-btn" class="tiny hidden">—</button> <!-- placeholder if you add custom controls -->
+      </div>
+    </header>
+
+    <main>
+      <section class="search">
+        <input id="cityInput" placeholder="Enter city or press 📍 to use location" />
+        <div class="search-actions">
+          <button id="searchBtn">🔍</button>
+          <button id="locateBtn">📍</button>
+        </div>
+      </section>
+
+      <section id="card" class="weather-card hidden">
+        <div class="top">
+          <div class="title">
+            <h2 id="cityName">City</h2>
+            <div id="localtime" class="small muted"></div>
+          </div>
+          <img id="icon" src="" alt="weather icon" />
+        </div>
+
+        <div class="main-info">
+          <div id="temp" class="temp">--°</div>
+          <div id="cond" class="cond">Condition</div>
+        </div>
+
+        <div class="details">
+          <div>💧 <span id="humidity">--%</span></div>
+          <div>💨 <span id="wind">-- km/h</span></div>
+          <div>🌡️ <span id="feelslike">--</span></div>
+        </div>
+
+        <div class="actions">
+          <button id="toggleUnit">Switch to °F</button>
+          <button id="addFav">⭐ Add Favorite</button>
+          <button id="refresh">🔄 Refresh</button>
+        </div>
+      </section>
+
+      <section class="favorites">
+        <h3>Favorites</h3>
+        <ul id="favList"></ul>
+      </section>
+
+      <p id="error" class="error hidden"></p>
+    </main>
+
+    <footer class="footer muted">Built with WeatherAPI and Electron</footer>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
