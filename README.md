@@ -15,6 +15,15 @@ It fetches real-time weather data .
 
 ## Screenshots
 
+
+
+#### Dashboard
+![Screenshot](./assets/screenshot2.png)
+
+#### City Search
+![ScreenShot](./assets/screenntshot1.png)
+
+
 ## Installation/Usage
 
 ### Linux 
