@@ -39,6 +39,11 @@
       ],
       "icon": "assets/icons",
       "category": "Utility"
-    }
+    },
+    "win": {
+    "target": ["nsis", "portable"],   
+    "icon": "assets/icons/app-icon.ico"
+}
+
   }
 }

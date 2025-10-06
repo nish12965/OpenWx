@@ -1,18 +1,12 @@
 // main.js
-const { app, BrowserWindow, ipcMain } = require('electron');
-const path = require('path');
-const https = require('https');
-// require('dotenv').config();
+const { app, BrowserWindow, ipcMain } = require("electron");
+const path = require("path");
+const https = require("https");
 
-// Backend endpoint for fetching weather securely
-const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; // your deployed backend
-const CLIENT_APP_KEY = "some_random_secret_string"; // harmless validation key
+// Backend endpoint
+const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; // Your deployed proxy
+const CLIENT_APP_KEY = "some_random_secret_string"; // optional harmless key if you add validation in backend
 
-// if (!WEATHER_API_KEY) {
-//   console.warn('WARNING: WEATHER_API_KEY not found in environment. Create a .env file.');
-// }
-
-//properties of Window
 function createWindow() {
   const win = new BrowserWindow({
     width: 480,
@@ -22,67 +16,67 @@ function createWindow() {
     resizable: true,
     maximizable: true,
     minimizable: true,
-    title: 'Weather Dashboard',
+    title: "Weather Dashboard",
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
-      nodeIntegration: false
-    }
+      nodeIntegration: false,
+    },
   });
 
-  win.loadFile('index.html');
-
-  
+  win.loadFile("index.html");
 }
 
-
-// --- Secure Weather API Call via Backend ---
-function callWeatherAPIByQuery(query) {
+// Fetch weather via backend proxy
+async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
-  const url = `${BACKEND_BASE}/weather?q=${encoded}`;
+  let url = `${BACKEND_BASE}/${endpoint}?q=${encoded}`;
+  if (days) url += `&days=${days}`;
 
   return new Promise((resolve, reject) => {
-    const options = {
-      headers: { "x-app-key": CLIENT_APP_KEY }
-    };
-
-    https.get(url, options, (res) => {
-      let raw = '';
-      res.on('data', (chunk) => (raw += chunk));
-      res.on('end', () => {
-        try {
-          const json = JSON.parse(raw);
-          if (json && json.error) {
-            reject(new Error(json.error.message || 'API error'));
-          } else resolve(json);
-        } catch (err) {
-          reject(new Error('Invalid JSON from backend'));
-        }
-      });
-    }).on('error', (err) => {
-      reject(err);
-    });
+    https
+      .get(url, { headers: { "x-app-key": CLIENT_APP_KEY } }, (res) => {
+        let raw = "";
+        res.on("data", (chunk) => (raw += chunk));
+        res.on("end", () => {
+          try {
+            const json = JSON.parse(raw);
+            if (json && json.error) reject(new Error(json.error));
+            else resolve(json);
+          } catch (err) {
+            reject(new Error("Invalid JSON from backend"));
+          }
+        });
+      })
+      .on("error", (err) => reject(err));
   });
 }
-
 
 app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
-  // on macOS apps usually stay until user quits explicitly
-  if (process.platform !== 'darwin') app.quit();
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-// IPC: renderer will call this to get weather data
-ipcMain.handle('get-weather', async (event, { query }) => {
+// IPC handlers
+ipcMain.handle("get-weather", async (event, { query }) => {
   try {
-    const data = await callWeatherAPIByQuery(query);
+    const data = await callBackend("weather", query);
     return { data };
   } catch (err) {
-    return { error: err.message || 'Failed to fetch weather' };
+    return { error: err.message || "Failed to fetch weather" };
+  }
+});
+
+ipcMain.handle("get-forecast", async (event, { query, days }) => {
+  try {
+    const data = await callBackend("forecast", query, days);
+    return { data };
+  } catch (err) {
+    return { error: err.message || "Failed to fetch forecast" };
   }
 });
