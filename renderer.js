@@ -1,6 +1,5 @@
 // renderer.js
 
-// Helper
 const $ = (id) => document.getElementById(id);
 
 // --- UI Elements ---
@@ -148,7 +147,7 @@ async function fetchWeather(query) {
 async function fetchForecast(query) {
   hideError();
   try {
-    const res = await window.api.getForecast(query);
+    const res = await window.api.getForecast(query, 3); // 3-day forecast
     if (res.error) showError(res.error);
     else renderForecast(res.data);
   } catch (err) {

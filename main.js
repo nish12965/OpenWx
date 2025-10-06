@@ -31,6 +31,9 @@ function createWindow() {
   // win.webContents.openDevTools();
 }
 
+
+
+
 // 🌤️ Function to call backend endpoints
 async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
@@ -57,7 +60,11 @@ async function callBackend(endpoint, query, days = null) {
 }
 
 // 🪶 Electron app lifecycle
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+   // launch both main app and widget
+});
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
