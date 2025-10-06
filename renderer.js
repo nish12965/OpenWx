@@ -2,7 +2,7 @@
 
 const $ = (id) => document.getElementById(id);
 
-// --- UI Elements ---
+// UI Elements
 const cityInput = $("cityInput");
 const searchBtn = $("searchBtn");
 const locateBtn = $("locateBtn");
@@ -41,7 +41,7 @@ function formatTemp(c) {
   return isCelsius ? `${Math.round(c)}°C` : `${Math.round(c * 9/5 + 32)}°F`;
 }
 
-// --- Dynamic Background ---
+// Dynamic Background
 function setDynamicBackground(text, isDay) {
   text = (text || "").toLowerCase();
   const body = document.body;
@@ -58,7 +58,7 @@ function setDynamicBackground(text, isDay) {
   else body.style.background = "linear-gradient(135deg,#74ebd5,#acb6e5)";
 }
 
-// --- Favorites ---
+// Favorites 
 function renderFavs() {
   favList.innerHTML = "";
   favorites.forEach((c) => {
@@ -82,7 +82,7 @@ function renderFavs() {
   });
 }
 
-// --- Render Current Weather ---
+//  Render Current Weather
 function renderWeather(data) {
   if (!data || !data.location || !data.current) {
     showError("No weather data available.");
@@ -107,7 +107,7 @@ function renderWeather(data) {
   currentQuery = loc.name;
 }
 
-// --- Render 3-Day Forecast ---
+//  Render 3-Day Forecast
 function renderForecast(data) {
   if (!data || !data.forecast || !data.forecast.forecastday) {
     showError("No forecast available.");
@@ -131,7 +131,7 @@ function renderForecast(data) {
   forecastContainer.classList.remove("hidden");
 }
 
-// --- Fetch Current Weather ---
+// Fetch Current Weather 
 async function fetchWeather(query) {
   hideError();
   try {
@@ -143,7 +143,7 @@ async function fetchWeather(query) {
   }
 }
 
-// --- Fetch Forecast ---
+//  Fetch Forecast 
 async function fetchForecast(query) {
   hideError();
   try {
@@ -155,7 +155,7 @@ async function fetchForecast(query) {
   }
 }
 
-// --- Fetch and Render Combined ---
+// Fetch and Render Combined 
 async function fetchAndRender(query) {
   await fetchWeather(query);
   forecastContainer.innerHTML = "";
@@ -209,13 +209,13 @@ refreshBtn.onclick = () => {
   fetchAndRender(currentQuery);
 };
 
-// ✅ 3-Day Forecast Button
+// 3-Day Forecast Button
 forecastBtn.onclick = () => {
   if (!currentQuery) return showError("No city selected for forecast.");
   fetchForecast(currentQuery);
 };
 
-// --- Initialize ---
+// Initialize 
 renderFavs();
 window.addEventListener("DOMContentLoaded", () => {
   if (favorites.length > 0) fetchAndRender(favorites[0]);

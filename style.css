@@ -1,4 +1,4 @@
-/* 🌤️ OpenWx App Styles */
+/* OpenWx App Styles */
 
 /* Import Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -32,9 +32,9 @@ body.dark-theme {
   --border: rgba(255, 255, 255, 0.08);
 }
 
-/* ======================================== */
+
 /* GLOBALS */
-/* ======================================== */
+
 * {
   box-sizing: border-box;
 }
@@ -55,9 +55,9 @@ body {
   padding: 24px;
 }
 
-/* ======================================== */
+
 /* APP CONTAINER */
-/* ======================================== */
+
 .app-container {
   width: 100%;
   max-width: 480px;
@@ -72,9 +72,8 @@ body {
   gap: 14px;
 }
 
-/* ======================================== */
 /* HEADER */
-/* ======================================== */
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -102,9 +101,9 @@ body {
   transform: scale(1.05);
 }
 
-/* ======================================== */
+
 /* SEARCH */
-/* ======================================== */
+
 .search {
   display: flex;
   gap: 10px;
@@ -143,9 +142,8 @@ body {
   transform: scale(1.05);
 }
 
-/* ======================================== */
 /* WEATHER CARD */
-/* ======================================== */
+
 .weather-card {
   background: var(--card-bg);
   padding: 14px;
@@ -228,9 +226,8 @@ body {
   transform: scale(1.05);
 }
 
-/* ======================================== */
 /* 3-DAY FORECAST */
-/* ======================================== */
+
 .forecast-section {
   display: flex;
   flex-direction: column;
@@ -290,9 +287,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* ======================================== */
 /* FAVORITES */
-/* ======================================== */
 .favorites h3 {
   margin: 8px 0 6px 0;
   font-size: 1rem;
@@ -341,9 +336,9 @@ body {
   transform: scale(1.05);
 }
 
-/* ======================================== */
+
 /* FOOTER & ERROR */
-/* ======================================== */
+
 .footer {
   font-size: 0.82rem;
   text-align: center;

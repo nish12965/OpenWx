@@ -1,13 +1,13 @@
-// main.js
+
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const https = require("https");
 
-// 🌐 Backend proxy endpoint
+// Backend proxy endpoint
 const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; // 🔹 Replace with your deployed proxy URL
 const CLIENT_APP_KEY = "openwx_client_key"; // optional harmless key
 
-// 🪟 Create the main app window
+// Create the main app window
 function createWindow() {
   const win = new BrowserWindow({
     width: 480,
@@ -27,14 +27,9 @@ function createWindow() {
 
   win.loadFile("index.html");
 
-  // Optional: Open DevTools in dev mode
-  // win.webContents.openDevTools();
 }
 
-
-
-
-// 🌤️ Function to call backend endpoints
+//  Function to call backend endpoints
 async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
   let url = `${BACKEND_BASE}/${endpoint}?q=${encoded}`;
@@ -59,10 +54,9 @@ async function callBackend(endpoint, query, days = null) {
   });
 }
 
-// 🪶 Electron app lifecycle
+//  Electron app lifecycle
 app.whenReady().then(() => {
   createWindow();
-   // launch both main app and widget
 });
 
 
@@ -74,9 +68,6 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-// ===========================================
-// IPC HANDLERS (communication with renderer)
-// ===========================================
 
 // Get current weather data
 ipcMain.handle("get-weather", async (event, { query }) => {
