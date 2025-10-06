@@ -3,19 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Weather Dashboard</title>
+  <title>OpenWx - Weather Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="light-theme">
   <div id="app" class="app-container">
+    <!-- Header -->
     <header class="header">
-      <h1>Weather Dashboard</h1>
+      <h1>🌦️ OpenWx - Weather Dashboard</h1>
       <div class="controls">
-        <button id="min-btn" class="tiny hidden">—</button> <!-- placeholder if you add custom controls -->
+        <button id="themeToggle">🌙</button>
       </div>
     </header>
 
+    <!-- Main -->
     <main>
+      <!-- Search Section -->
       <section class="search">
         <input id="cityInput" placeholder="Enter city or press 📍 to use location" />
         <div class="search-actions">
@@ -24,6 +27,7 @@
         </div>
       </section>
 
+      <!-- Weather Info Card -->
       <section id="card" class="weather-card hidden">
         <div class="top">
           <div class="title">
@@ -37,8 +41,6 @@
           <div id="temp" class="temp">--°</div>
           <div id="cond" class="cond">Condition</div>
         </div>
-        <div id="forecastContainer" class="forecast-container"></div>
-
 
         <div class="details">
           <div>💧 <span id="humidity">--%</span></div>
@@ -53,17 +55,54 @@
         </div>
       </section>
 
+      <!-- Forecast Section -->
+      <section class="forecast-section">
+        <button id="forecastBtn">📅 Show 3-Day Forecast</button>
+        <div id="forecastContainer" class="forecast-container hidden"></div>
+      </section>
+
+      <!-- Favorites Section -->
       <section class="favorites">
-        <h3>Favorites</h3>
+        <h3>⭐ Favorites</h3>
         <ul id="favList"></ul>
       </section>
 
       <p id="error" class="error hidden"></p>
     </main>
 
-    <footer class="footer muted">Built with WeatherAPI and Electron</footer>
+    <!-- Footer -->
+    <footer class="footer muted">
+      Built with ❤️ using WeatherAPI & Electron
+    </footer>
   </div>
 
+  <!-- Scripts -->
   <script src="renderer.js"></script>
+  <script>
+    // --- Theme Toggle Handler ---
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+
+    function updateThemeIcon() {
+      themeToggle.textContent = body.classList.contains("dark-theme") ? "☀️" : "🌙";
+    }
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark-theme");
+      body.classList.toggle("light-theme");
+      updateThemeIcon();
+      localStorage.setItem("theme", body.classList.contains("dark-theme") ? "dark" : "light");
+    });
+
+    // Load saved theme
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        body.classList.remove("light-theme");
+        body.classList.add("dark-theme");
+      }
+      updateThemeIcon();
+    });
+  </script>
 </body>
 </html>
