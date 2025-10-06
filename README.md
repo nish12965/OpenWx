@@ -48,13 +48,15 @@ All builds and packaging were performed on this platform.
 > **Note:**  
 > macOS users can still run the app directly from **source** using Node.js and npm.
 
----
+### Contribution Welcome!
+
+- macOS contributors are especially welcome to help create and test a proper .dmg installer build.
 
 ### 🍎 Running on macOS (from source)
 
 - Clone the repository & installl dependecies & Run it:
    ```bash
-   git clone https://github.com/<your-username>/OpenWx.git
+   git clone https://github.com/nish12965/OpenWx.git
    cd OpenWx
    npm install
    npm run dev
