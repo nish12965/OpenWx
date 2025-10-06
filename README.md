@@ -1,4 +1,4 @@
-# OpenWx Weather Dashboard 🌤️
+<img width="1093" height="756" alt="OpenWx-v2 0 0_screenshot1" src="https://github.com/user-attachments/assets/34b8bf5d-0436-4663-9f0a-7ccf47770520" /># OpenWx Weather Dashboard 🌤️
 
 OpenWx is a **modern, secure, cross-platform weather app** built with **Electron**. 
 It fetches real-time weather data .
@@ -18,10 +18,13 @@ It fetches real-time weather data .
 
 
 #### Dashboard
-![Screenshot](./assets/screenshot2.png)
+![Screenshot](./assets/OpenWx-v2.0.0_screenshot1.png)
 
-#### City Search
-![ScreenShot](./assets/screenntshot1.png)
+#### 3 Day ForeCast
+![ScreenShot](./assets/OpenWx-v2.0.0_screenshot2.png)
+
+#### Theme
+![Screenshot](./assets/OpenWx-v2.0.0_screenshot3.png)
 
 
 ## Installation/Usage
