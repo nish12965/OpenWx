@@ -32,12 +32,32 @@ It fetches real-time weather data .
 - Download the latest OpenWx **'.exe(Portable)'** from [Releases](https://github.com/nish12965/OpenWx/releases)
 - Double-click the **.exe** to run — no installation needed.
 
-### If You want to run the app form source
+## 🧩 Platform Compatibility & Build Info
 
-- ```git clone https://github.com/your-username/OpenWx.git```
-- ```cd OpenWx```
-- ```npm install```
-- ```npm run dev```
+This app has been **developed and tested on Fedora 42 (KDE Plasma)** using Linux as the primary environment.  
+All builds and packaging were performed on this platform.
+
+### 🖥️ Build Summary
+
+| Platform | Build Type | Build Method | Status |
+|-----------|-------------|---------------|---------|
+| **Linux** | `.AppImage` | Built natively on Fedora using `electron-builder` | ✅ Tested & Stable |
+| **Windows** | `.exe` (Setup & Portable) | Built using [Wine](https://www.winehq.org/) compatibility layer on Linux | ✅ Tested on Windows 10/11 |
+| **macOS** | `.dmg` (To be added) | Requires macOS environment for packaging | 🚧 Not Yet Built |
+
+> **Note:**  
+> macOS users can still run the app directly from **source** using Node.js and npm.
+
+---
+
+### 🍎 Running on macOS (from source)
+
+- Clone the repository & installl dependecies & Run it:
+   ```bash
+   git clone https://github.com/<your-username>/OpenWx.git
+   cd OpenWx
+   npm install
+   npm run dev
 
 
 ## Licence 
