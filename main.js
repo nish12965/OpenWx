@@ -88,3 +88,14 @@ ipcMain.handle("get-forecast", async (event, { query, days }) => {
     return { error: err.message || "Failed to fetch forecast" };
   }
 });
+
+//  Get 7-day forecast
+ipcMain.handle("get-forecast-7day", async (event, { query }) => {
+  try {
+    // 7-day forecast request
+    const data = await callBackend("forecast", query, 7);
+    return { data };
+  } catch (err) {
+    return { error: err.message || "Failed to fetch 7-day forecast" };
+  }
+});

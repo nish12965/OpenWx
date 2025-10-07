@@ -1,5 +1,3 @@
-// renderer.js
-
 const $ = (id) => document.getElementById(id);
 
 // UI Elements
@@ -22,6 +20,7 @@ const windEl = $("wind");
 const feelsEl = $("feelslike");
 const forecastContainer = $("forecastContainer");
 const errorEl = $("error");
+
 
 let isCelsius = true;
 let currentQuery = "";
@@ -107,7 +106,7 @@ function renderWeather(data) {
   currentQuery = loc.name;
 }
 
-//  Render 3-Day Forecast
+//  Render Forecast (3 or 7 days)
 function renderForecast(data) {
   if (!data || !data.forecast || !data.forecast.forecastday) {
     showError("No forecast available.");
@@ -143,7 +142,7 @@ async function fetchWeather(query) {
   }
 }
 
-//  Fetch Forecast 
+//  Fetch 3-Day Forecast 
 async function fetchForecast(query) {
   hideError();
   try {
@@ -155,13 +154,25 @@ async function fetchForecast(query) {
   }
 }
 
+// Fetch 7-Day Forecast
+async function fetchForecast7Day(query) {
+  hideError();
+  try {
+    const res = await window.api.getForecast7Day(query);
+    if (res.error) showError(res.error);
+    else renderForecast(res.data);
+  } catch (err) {
+    showError(err.message || "Failed to fetch 7-day forecast data.");
+  }
+}
+
 // Fetch and Render Combined 
 async function fetchAndRender(query) {
   await fetchWeather(query);
   forecastContainer.innerHTML = "";
 }
 
-// --- Geolocation ---
+//  Geolocation 
 function getLocationAndFetch() {
   hideError();
   if (navigator.geolocation) {
@@ -176,7 +187,7 @@ function getLocationAndFetch() {
   } else fetchAndRender("auto:ip");
 }
 
-// --- Event Listeners ---
+// Event Listeners
 searchBtn.onclick = () => {
   const txt = cityInput.value.trim();
   if (!txt) return showError("Enter a city name.");
@@ -213,6 +224,12 @@ refreshBtn.onclick = () => {
 forecastBtn.onclick = () => {
   if (!currentQuery) return showError("No city selected for forecast.");
   fetchForecast(currentQuery);
+};
+
+//  7-Day Forecast Button
+forecast7Btn.onclick = () => {
+  if (!currentQuery) return showError("No city selected for forecast.");
+  fetchForecast7Day(currentQuery);
 };
 
 // Initialize 
