@@ -4,8 +4,8 @@ const path = require("path");
 const https = require("https");
 
 // Backend proxy endpoint
-const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; // 🔹 Replace with your deployed proxy URL
-const CLIENT_APP_KEY = "openwx_client_key"; // optional harmless key
+const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; 
+const CLIENT_APP_KEY = "some_random_secret_string"; // optional key
 
 // Create the main app window
 function createWindow() {
