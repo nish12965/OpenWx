@@ -7,6 +7,7 @@ const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com";
 const CLIENT_APP_KEY = "some_random_secret_string"; // optional key
 
 let tray = null;
+let mainWindow = null;
 
 // Create the main app window
 function createWindow() {
@@ -62,7 +63,9 @@ function createTray(win) {
   tray.setContextMenu(contextMenu);
 
   tray.on("double-click", () => {
-    win.show();
+    if (mainWindow) {
+    mainWindow.show();
+    }
   });
 }
 
