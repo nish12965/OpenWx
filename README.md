@@ -11,7 +11,7 @@ It fetches real-time weather data .
 - 🌡️ **Unit Switching:** Toggle between Celsius and Fahrenheit.  
 - 🖌️ **Clean UI:** Minimal, modern, dynamic background based on weather.  
 - 🔄 **Manual Refresh:** Refresh weather data for the current city.
-- Tray Icon support
+- 📍 **Tray Icon Support:** App stays active in the system tray with quick-access menu options.
   
 
 

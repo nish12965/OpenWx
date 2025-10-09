@@ -137,6 +137,7 @@ async function fetchWeather(query) {
     const res = await window.api.getWeather(query);
     if (res.error) showError(res.error);
     else renderWeather(res.data);
+    window.api.send("update-widget", res.data); 
   } catch (err) {
     showError(err.message || "Failed to fetch weather data.");
   }

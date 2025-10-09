@@ -8,6 +8,7 @@ const CLIENT_APP_KEY = "some_random_secret_string"; // optional key
 
 let tray = null;
 let mainWindow = null;
+let widgetWindow = null;
 
 // Create the main app window
 function createWindow() {
@@ -19,7 +20,7 @@ function createWindow() {
     resizable: true,
     maximizable: true,
     title: " Weathering with You ",
-    icon: path.join(__dirname, "assets/app_icon.png"),// Icon not created yet
+    icon: path.join(__dirname, "assets/app_icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -38,6 +39,30 @@ function createWindow() {
   });
 
   return mainWindow;
+}
+function createWidgetWindow() {
+  widgetWindow = new BrowserWindow({
+    width: 180,
+    height: 80,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    resizable: false,
+    skipTaskbar: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+    },
+  });
+
+  widgetWindow.loadFile("widget.html"); // Will be written
+  widgetWindow.setAlwaysOnTop(true, "screen-saver");
+  widgetWindow.setVisibleOnAllWorkspaces(true);
+
+  // clicking widget restores main app
+  widgetWindow.on("click", () => {
+    if (mainWindow) mainWindow.show();
+  });
 }
 
 function createTray(win) {
@@ -98,6 +123,7 @@ async function callBackend(endpoint, query, days = null) {
 app.whenReady().then(() => {
   const mainWindow = createWindow(); 
   createTray(mainWindow); 
+  createWidgetWindow();
 });
 
 app.on("window-all-closed", () => {
@@ -111,10 +137,18 @@ app.on("activate", () => {
   }
 });
 
+// IPC listener to update widget dynamically
+ipcMain.on("update-widget", (event, weatherData) => {
+  if (widgetWindow) {
+    widgetWindow.webContents.send("weather-update", weatherData);
+  }
+});
+
 // Get current weather data
 ipcMain.handle("get-weather", async (event, { query }) => {
   try {
     const data = await callBackend("weather", query);
+    if (widgetWindow) widgetWindow.webContents.send("weather-update", data);
     return { data };
   } catch (err) {
     return { error: err.message || "Failed to fetch weather" };
