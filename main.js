@@ -1,5 +1,4 @@
-
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage } = require("electron");
 const path = require("path");
 const https = require("https");
 
@@ -7,17 +6,19 @@ const https = require("https");
 const BACKEND_BASE = "https://weather-proxy-fb81.onrender.com"; 
 const CLIENT_APP_KEY = "some_random_secret_string"; // optional key
 
+let tray = null;
+
 // Create the main app window
 function createWindow() {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 480,
     height: 720,
     minWidth: 360,
     minHeight: 520,
     resizable: true,
     maximizable: true,
-    title: "OpenWx - Weather Dashboard",
-    icon: path.join(__dirname, "assets/icon.png"),
+    title: " Weathering with You ",
+    icon: path.join(__dirname, "assets/app_icon.png"),// Icon not created yet
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -25,11 +26,47 @@ function createWindow() {
     },
   });
 
-  win.loadFile("index.html");
+  mainWindow.loadFile("index.html");
 
+  // FIX: minimize-to-tray behavior
+  mainWindow.on("close", (event) => {
+    if (!app.isQuiting) {
+      event.preventDefault(); // stop window from closing
+      mainWindow.hide();      // hide window instead
+    }
+  });
+
+  return mainWindow;
 }
 
-//  Function to call backend endpoints
+function createTray(win) {
+  const iconPath = path.join(__dirname, "assets/weather.png"); // tray icon not created
+  const trayIcon = nativeImage.createFromPath(iconPath);
+  tray = new Tray(trayIcon);
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Show App",
+      click: () => win.show(),
+    },
+    {
+      label: "Quit",
+      click: () => {
+        app.isQuiting = true; // FIX: allow window to quit
+        app.quit();
+      },
+    },
+  ]);
+
+  tray.setToolTip("OpenWx Weather App");
+  tray.setContextMenu(contextMenu);
+
+  tray.on("double-click", () => {
+    win.show();
+  });
+}
+
+// Function to call backend endpoints
 async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
   let url = `${BACKEND_BASE}/${endpoint}?q=${encoded}`;
@@ -54,20 +91,22 @@ async function callBackend(endpoint, query, days = null) {
   });
 }
 
-//  Electron app lifecycle
+// Electron app lifecycle
 app.whenReady().then(() => {
-  createWindow();
+  const mainWindow = createWindow(); 
+  createTray(mainWindow); 
 });
-
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  if (BrowserWindow.getAllWindows().length === 0) {
+    const mainWindow = createWindow(); 
+    createTray(mainWindow);
+  }
 });
-
 
 // Get current weather data
 ipcMain.handle("get-weather", async (event, { query }) => {
@@ -89,10 +128,9 @@ ipcMain.handle("get-forecast", async (event, { query, days }) => {
   }
 });
 
-//  Get 7-day forecast
+// Get 7-day forecast
 ipcMain.handle("get-forecast-7day", async (event, { query }) => {
   try {
-    // 7-day forecast request
     const data = await callBackend("forecast", query, 7);
     return { data };
   } catch (err) {
