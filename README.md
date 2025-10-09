@@ -10,7 +10,9 @@ It fetches real-time weather data .
 - ⭐ **Favorite Cities:** Save a list of favorite cities for quick access.  
 - 🌡️ **Unit Switching:** Toggle between Celsius and Fahrenheit.  
 - 🖌️ **Clean UI:** Minimal, modern, dynamic background based on weather.  
-- 🔄 **Manual Refresh:** Refresh weather data for the current city.  
+- 🔄 **Manual Refresh:** Refresh weather data for the current city.
+- Tray Icon support
+  
 
 
 ## Screenshots
