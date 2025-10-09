@@ -208,11 +208,16 @@ toggleUnitBtn.onclick = () => {
 
 addFavBtn.onclick = () => {
   if (!currentQuery) return showError("No city selected.");
-  if (!favorites.includes(currentQuery)) {
+  const index = favorites.indexOf(currentQuery);
+  if (index === -1) { 
     favorites.push(currentQuery);
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-    renderFavs();
+  } else {
+    favorites.splice(index, 1);
   }
+
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  renderFavs();
+  
 };
 
 refreshBtn.onclick = () => {
