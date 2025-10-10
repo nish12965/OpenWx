@@ -43,7 +43,7 @@ window.api.receive("weather-update", (data) => {
   const emoji = getWeatherEmoji(conditionText);
 
   tempEl.textContent = `${Math.round(data.current.temp_c)}°C`;
-  condEl.textContent = `${conditionText} ${emoji}`; // ✅ add emoji here
+  condEl.textContent = `${conditionText} ${emoji}`; // add emoji here
 
   setWidgetBackground(conditionText, data.current.is_day === 1);
 });

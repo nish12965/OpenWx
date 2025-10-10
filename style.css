@@ -238,7 +238,7 @@ body {
   transform: scale(1.05);
 }
 
-/* ✅ NEW: 7-DAY FORECAST BUTTON */
+/* 7-DAY FORECAST BUTTON */
 #forecast7Btn {
   background: linear-gradient(135deg, #00c6ff, #0072ff);
   color: #fff;
@@ -262,23 +262,29 @@ body {
 /* FORECAST CARDS */
 .forecast-container {
   display: flex;
-  justify-content: space-between;
   gap: 10px;
   width: 100%;
-  flex-wrap: wrap;
-  transition: opacity 0.3s ease;
+  overflow-x: auto;         
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+  scroll-behavior: smooth;
+  background: inherit; 
+  scroll-snap-type: x mandatory;
 }
 
 .forecast-day {
-  flex: 1;
+  flex: 0 0 auto;
   min-width: 120px;
   background: var(--glass-2);
   border-radius: 12px;
   text-align: center;
   padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border: 1px solid var(--border);
   color: var(--text);
   transition: transform 0.25s ease, background 0.3s ease;
+  scroll-snap-align: start;
 }
 
 .forecast-day:hover {
