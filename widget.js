@@ -2,7 +2,20 @@ const tempEl = document.getElementById("temp");
 const condEl = document.getElementById("cond");
 const container = document.querySelector(".widget-container");
 
-// Function to set dynamic background ---
+function getWeatherEmoji(conditionText) {
+  const text = (conditionText || "").toLowerCase();
+
+  if (text.includes("rain") || text.includes("shower")) return "🌨️";
+  if (text.includes("thunder")) return "⛈️";
+  if (text.includes("snow") || text.includes("sleet")) return "❄️";
+  if (text.includes("fog") || text.includes("mist") || text.includes("haze")) return "🌫️";
+  if (text.includes("cloud")) return "☁️";
+  if (text.includes("clear") || text.includes("sun")) return "☀️";
+  if (text.includes("wind")) return "🌬️";
+  return "🌈"; // fallback
+}
+
+// Function to set dynamic background
 function setWidgetBackground(conditionText, isDay) {
   const text = (conditionText || "").toLowerCase();
   let bg = "linear-gradient(135deg, #f0f0f0, #e0e0e0)";
@@ -22,12 +35,15 @@ function setWidgetBackground(conditionText, isDay) {
   container.style.color = "black";
 }
 
-// Always ready listener (no DOMContentLoaded delay) 
+// Always ready listener
 window.api.receive("weather-update", (data) => {
   if (!data?.current) return;
 
-  tempEl.textContent = `${Math.round(data.current.temp_c)}°C`;
-  condEl.textContent = data.current.condition.text;
+  const conditionText = data.current.condition.text;
+  const emoji = getWeatherEmoji(conditionText);
 
-  setWidgetBackground(data.current.condition.text, data.current.is_day === 1);
+  tempEl.textContent = `${Math.round(data.current.temp_c)}°C`;
+  condEl.textContent = `${conditionText} ${emoji}`; // ✅ add emoji here
+
+  setWidgetBackground(conditionText, data.current.is_day === 1);
 });
