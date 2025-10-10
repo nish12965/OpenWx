@@ -1,30 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Weather Widget</title>
-<style>
-  body {
-    margin: 0;
-    padding: 10px;
-    font-family: sans-serif;
-    background: rgba(30, 30, 30, 0.6);
-    color: white;
-    -webkit-app-region: drag; 
-    user-select: none;
-  }
-  #temp {
-    font-size: 1.5em;
-    font-weight: bold;
-  }
-  #cond {
-    font-size: 0.9em;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Weather Widget</title>
+  <link rel="stylesheet" href="widget.css" />
 </head>
 <body>
-  <div id="temp">--°C</div>
-  <div id="cond">Loading...</div>
+  <div class="widget-container">
+    <div id="temp">--°C</div>
+    <div id="cond">Loading...</div>
+  </div>
+
   <script src="widget.js"></script>
 </body>
 </html>

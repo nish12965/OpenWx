@@ -1,0 +1,56 @@
+/* --- Body --- */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-app-region: drag; /* Draggable widget */
+  user-select: none;
+  width: 250px;
+  height: 120px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* Dynamic background via JS */
+  color: black;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+/* --- Widget Container --- */
+.widget-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  height: 90%;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  transition: transform 0.3s ease, background 0.5s ease;
+}
+
+/* --- Temperature --- */
+#temp {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 4px 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Condition --- */
+#cond {
+  font-size: 1em;
+  font-weight: 500;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- Hover Effect --- */
+.widget-container:hover {
+  transform: scale(1.03);
+}

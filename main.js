@@ -42,8 +42,8 @@ function createWindow() {
 }
 function createWidgetWindow() {
   widgetWindow = new BrowserWindow({
-    width: 180,
-    height: 80,
+    width: 250,
+    height: 120,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
@@ -59,7 +59,7 @@ function createWidgetWindow() {
   widgetWindow.setAlwaysOnTop(true, "screen-saver");
   widgetWindow.setVisibleOnAllWorkspaces(true);
 
-  // clicking widget restores main app
+
   widgetWindow.on("click", () => {
     if (mainWindow) mainWindow.show();
   });
