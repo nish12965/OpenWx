@@ -2,20 +2,19 @@ const tempEl = document.getElementById("temp");
 const condEl = document.getElementById("cond");
 const container = document.querySelector(".widget-container");
 
-window.currentQuery = null;
-
-function getWeatherEmoji(conditionText) {
-  const text = (conditionText || "").toLowerCase();
-
-  if (text.includes("rain") || text.includes("shower")) return "🌨️";
-  if (text.includes("thunder")) return "⛈️";
-  if (text.includes("snow") || text.includes("sleet")) return "❄️";
-  if (text.includes("fog") || text.includes("mist") || text.includes("haze")) return "🌫️";
-  if (text.includes("cloud")) return "☁️";
-  if (text.includes("clear") || text.includes("sun")) return "☀️";
-  if (text.includes("wind")) return "🌬️";
-  return "🌈"; // fallback
+// Add weather icon dynamically 
+let iconEl = document.getElementById("weatherIcon");
+if (!iconEl) {
+  iconEl = document.createElement("img");
+  iconEl.id = "weatherIcon";
+  iconEl.style.width = "48px";
+  iconEl.style.height = "48px";
+  iconEl.style.marginBottom = "4px";
+  iconEl.style.borderRadius = "8px";
+  container.prepend(iconEl); 
 }
+
+window.currentQuery = null;
 
 // Function to set dynamic background
 function setWidgetBackground(conditionText, isDay) {
@@ -42,16 +41,17 @@ window.api.receive("weather-update", (data) => {
   if (!data?.current) return;
 
   const conditionText = data.current.condition.text;
-  const emoji = getWeatherEmoji(conditionText);
+
+  iconEl.src = `https:${data.current.condition.icon}`;
+  iconEl.alt = conditionText;
 
   tempEl.textContent = `${Math.round(data.current.temp_c)}°C`;
-  condEl.textContent = `${conditionText} ${emoji}`; // add emoji here
+  condEl.textContent = conditionText; 
 
   setWidgetBackground(conditionText, data.current.is_day === 1);
 
   window.currentQuery = data.location?.name || window.currentQuery;
 });
-
 
 // Make widget clickable to open main app
 container.addEventListener("click", () => {
@@ -76,6 +76,7 @@ window.api.receive("widget-refresh", () => {
   // Show temporary feedback
   condEl.textContent = "Refreshing…";
   tempEl.textContent = "--°C";
+  iconEl.src = ""; // clear icon temporarily
 
   window.api.getWeather(window.currentQuery)
     .then(res => {
