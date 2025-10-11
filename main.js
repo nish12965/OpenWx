@@ -10,7 +10,7 @@ let tray = null;
 let mainWindow = null;
 let widgetWindow = null;
 
-// --- Create the main app window ---
+// Create the main app window
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 580,
@@ -135,9 +135,9 @@ async function callBackend(endpoint, query, days = null) {
   });
 }
 
-// --- App lifecycle ---
+// App lifecycle 
 app.whenReady().then(() => {
-  mainWindow = createWindow();  // 🔹 use global variable (no "const")
+  mainWindow = createWindow();  // 
   createTray();
   createWidgetWindow();
 });
@@ -148,14 +148,14 @@ app.on("window-all-closed", () => {
 
 app.on("activate", () => {
   if (!mainWindow) {
-    mainWindow = createWindow(); // 🔹 fix: use global variable
+    mainWindow = createWindow(); 
     createTray();
   }
 });
 
-// --- IPC Communication ---
+// IPC Communication 
 
-// 🔹 Widget click opens main window
+// 
 ipcMain.on("widget-clicked", () => {
   console.log("Widget clicked event received");
 
@@ -168,12 +168,12 @@ ipcMain.on("widget-clicked", () => {
   mainWindow.focus();
 });
 
-// 🔹 Update widget dynamically
+// Update widget dynamically
 ipcMain.on("update-widget", (event, weatherData) => {
   if (widgetWindow) widgetWindow.webContents.send("weather-update", weatherData);
 });
 
-// 🔹 Weather API handlers
+//  Weather API handlers
 ipcMain.handle("get-weather", async (event, { query }) => {
   try {
     const data = await callBackend("weather", query);
