@@ -13,8 +13,8 @@ let widgetWindow = null;
 // --- Create the main app window ---
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 480,
-    height: 720,
+    width: 580,
+    height: 950,
     minWidth: 360,
     minHeight: 520,
     resizable: true,
