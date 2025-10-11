@@ -2,6 +2,8 @@ const tempEl = document.getElementById("temp");
 const condEl = document.getElementById("cond");
 const container = document.querySelector(".widget-container");
 
+window.currentQuery = null;
+
 function getWeatherEmoji(conditionText) {
   const text = (conditionText || "").toLowerCase();
 
@@ -46,6 +48,8 @@ window.api.receive("weather-update", (data) => {
   condEl.textContent = `${conditionText} ${emoji}`; // add emoji here
 
   setWidgetBackground(conditionText, data.current.is_day === 1);
+
+  window.currentQuery = data.location?.name || window.currentQuery;
 });
 
 
@@ -55,4 +59,30 @@ container.addEventListener("click", () => {
   window.api.send("widget-clicked");
 });
 
+// refresh widget
+setInterval(() => {
+  if (window.currentQuery) {
+    window.api.getWeather(window.currentQuery).then((res) => {
+      if (res.data) {
+        window.api.send("update-widget", res.data);
+      }
+    }).catch(err => console.error("Widget auto-refresh failed:", err));
+  }
+}, 3 * 60 * 1000);
 
+window.api.receive("widget-refresh", () => {
+  if (!window.currentQuery) return;
+
+  // Show temporary feedback
+  condEl.textContent = "Refreshing…";
+  tempEl.textContent = "--°C";
+
+  window.api.getWeather(window.currentQuery)
+    .then(res => {
+      if (res.data) window.api.send("update-widget", res.data);
+    })
+    .catch(err => {
+      console.error("Tray refresh failed:", err);
+      condEl.textContent = "Failed to refresh";
+    });
+});

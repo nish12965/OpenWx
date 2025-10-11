@@ -41,7 +41,7 @@ function createWindow() {
   return mainWindow;
 }
 
-// --- Create the widget window ---
+// Create the widget window 
 function createWidgetWindow() {
   widgetWindow = new BrowserWindow({
     width: 250,
@@ -63,7 +63,7 @@ function createWidgetWindow() {
   widgetWindow.setVisibleOnAllWorkspaces(true);
 }
 
-// --- Tray setup ---
+// Tray setup 
 function createTray() {
   const iconPath = path.join(__dirname, "assets/weather.png");
   const trayIcon = nativeImage.createFromPath(iconPath);
@@ -77,6 +77,17 @@ function createTray() {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.show();
         mainWindow.focus();
+      },
+    },
+    {
+      label: "Refresh",
+      click: () => {
+        if (widgetWindow) {
+          widgetWindow.webContents.send("widget-refresh"); 
+        }
+        if (mainWindow) {
+          mainWindow.webContents.send("refresh-main"); 
+        }
       },
     },
     {
@@ -99,7 +110,7 @@ function createTray() {
   });
 }
 
-// --- Backend API helper ---
+// Backend API helper
 async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
   let url = `${BACKEND_BASE}/${endpoint}?q=${encoded}`;
@@ -146,7 +157,7 @@ app.on("activate", () => {
 
 // 🔹 Widget click opens main window
 ipcMain.on("widget-clicked", () => {
-  console.log("🟢 Widget clicked event received");
+  console.log("Widget clicked event received");
 
   if (!mainWindow) {
     mainWindow = createWindow();
