@@ -1,9 +1,8 @@
-/* --- Body --- */
+/* Body */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  -webkit-app-region: drag; /* Draggable widget */
   user-select: none;
   width: 250px;
   height: 120px;
@@ -11,12 +10,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent; /* Dynamic background via JS */
+  background: transparent; 
   color: black;
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* --- Widget Container --- */
+/* Widget Container */
 .widget-container {
   display: flex;
   flex-direction: column;
@@ -30,11 +29,16 @@ body {
   background: rgba(255, 255, 255, 0.25);
   text-align: center;
   transition: transform 0.3s ease, background 0.5s ease;
-  -webkit-app-region: no-drag; 
+  -webkit-app-region: drag; 
+}
+
+/* Clickable content inside widget (no-drag) */
+.widget-content {
+  -webkit-app-region: no-drag; /* clickable */
   cursor: pointer;
 }
 
-/* --- Temperature --- */
+/* Temperature */
 #temp {
   font-size: 2em;
   font-weight: 700;
@@ -42,7 +46,7 @@ body {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* --- Condition --- */
+/* Condition */
 #cond {
   font-size: 1em;
   font-weight: 500;
@@ -52,7 +56,7 @@ body {
   text-overflow: ellipsis;
 }
 
-/* --- Hover Effect --- */
+/* Hover Effect */
 .widget-container:hover {
   transform: scale(1.03);
 }

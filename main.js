@@ -51,6 +51,7 @@ function createWidgetWindow() {
     alwaysOnTop: true,
     resizable: false,
     skipTaskbar: true,
+    movable:true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
