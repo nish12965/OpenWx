@@ -47,3 +47,12 @@ window.api.receive("weather-update", (data) => {
 
   setWidgetBackground(conditionText, data.current.is_day === 1);
 });
+
+
+// Make widget clickable to open main app
+container.addEventListener("click", () => {
+  console.log("Widget clicked (renderer)");
+  window.api.send("widget-clicked");
+});
+
+

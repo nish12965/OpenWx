@@ -10,16 +10,16 @@ let tray = null;
 let mainWindow = null;
 let widgetWindow = null;
 
-// Create the main app window
+// --- Create the main app window ---
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 480,
     height: 720,
     minWidth: 360,
     minHeight: 520,
     resizable: true,
     maximizable: true,
-    title: " Weathering with You ",
+    title: "Weathering with You",
     icon: path.join(__dirname, "assets/app_icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -30,16 +30,18 @@ function createWindow() {
 
   mainWindow.loadFile("index.html");
 
-  // FIX: minimize-to-tray behavior
+  // minimize-to-tray behavior
   mainWindow.on("close", (event) => {
     if (!app.isQuiting) {
-      event.preventDefault(); // stop window from closing
-      mainWindow.hide();      // hide window instead
+      event.preventDefault();
+      mainWindow.hide();
     }
   });
 
   return mainWindow;
 }
+
+// --- Create the widget window ---
 function createWidgetWindow() {
   widgetWindow = new BrowserWindow({
     width: 250,
@@ -55,30 +57,31 @@ function createWidgetWindow() {
     },
   });
 
-  widgetWindow.loadFile("widget.html"); // Will be written
+  widgetWindow.loadFile("widget.html");
   widgetWindow.setAlwaysOnTop(true, "screen-saver");
   widgetWindow.setVisibleOnAllWorkspaces(true);
-
-
-  widgetWindow.on("click", () => {
-    if (mainWindow) mainWindow.show();
-  });
 }
 
-function createTray(win) {
-  const iconPath = path.join(__dirname, "assets/weather.png"); // tray icon not created
+// --- Tray setup ---
+function createTray() {
+  const iconPath = path.join(__dirname, "assets/weather.png");
   const trayIcon = nativeImage.createFromPath(iconPath);
   tray = new Tray(trayIcon);
 
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show App",
-      click: () => win.show(),
+      click: () => {
+        if (!mainWindow) createWindow();
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.show();
+        mainWindow.focus();
+      },
     },
     {
       label: "Quit",
       click: () => {
-        app.isQuiting = true; // FIX: allow window to quit
+        app.isQuiting = true;
         app.quit();
       },
     },
@@ -88,13 +91,14 @@ function createTray(win) {
   tray.setContextMenu(contextMenu);
 
   tray.on("double-click", () => {
-    if (mainWindow) {
+    if (!mainWindow) createWindow();
+    if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.show();
-    }
+    mainWindow.focus();
   });
 }
 
-// Function to call backend endpoints
+// --- Backend API helper ---
 async function callBackend(endpoint, query, days = null) {
   const encoded = encodeURIComponent(query);
   let url = `${BACKEND_BASE}/${endpoint}?q=${encoded}`;
@@ -108,21 +112,21 @@ async function callBackend(endpoint, query, days = null) {
         res.on("end", () => {
           try {
             const json = JSON.parse(raw);
-            if (json && json.error) reject(new Error(json.error.message || json.error));
+            if (json?.error) reject(new Error(json.error.message || "Backend error"));
             else resolve(json);
-          } catch (err) {
+          } catch {
             reject(new Error("Invalid JSON from backend"));
           }
         });
       })
-      .on("error", (err) => reject(new Error("Failed to connect to backend: " + err.message)));
+      .on("error", (err) => reject(new Error("Network error: " + err.message)));
   });
 }
 
-// Electron app lifecycle
+// --- App lifecycle ---
 app.whenReady().then(() => {
-  const mainWindow = createWindow(); 
-  createTray(mainWindow); 
+  mainWindow = createWindow();  // 🔹 use global variable (no "const")
+  createTray();
   createWidgetWindow();
 });
 
@@ -131,20 +135,33 @@ app.on("window-all-closed", () => {
 });
 
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    const mainWindow = createWindow(); 
-    createTray(mainWindow);
+  if (!mainWindow) {
+    mainWindow = createWindow(); // 🔹 fix: use global variable
+    createTray();
   }
 });
 
-// IPC listener to update widget dynamically
+// --- IPC Communication ---
+
+// 🔹 Widget click opens main window
+ipcMain.on("widget-clicked", () => {
+  console.log("🟢 Widget clicked event received");
+
+  if (!mainWindow) {
+    mainWindow = createWindow();
+  }
+
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
+});
+
+// 🔹 Update widget dynamically
 ipcMain.on("update-widget", (event, weatherData) => {
-  if (widgetWindow) {
-    widgetWindow.webContents.send("weather-update", weatherData);
-  }
+  if (widgetWindow) widgetWindow.webContents.send("weather-update", weatherData);
 });
 
-// Get current weather data
+// 🔹 Weather API handlers
 ipcMain.handle("get-weather", async (event, { query }) => {
   try {
     const data = await callBackend("weather", query);
@@ -155,7 +172,6 @@ ipcMain.handle("get-weather", async (event, { query }) => {
   }
 });
 
-// Get 3-day forecast
 ipcMain.handle("get-forecast", async (event, { query, days }) => {
   try {
     const data = await callBackend("forecast", query, days);
@@ -165,7 +181,6 @@ ipcMain.handle("get-forecast", async (event, { query, days }) => {
   }
 });
 
-// Get 7-day forecast
 ipcMain.handle("get-forecast-7day", async (event, { query }) => {
   try {
     const data = await callBackend("forecast", query, 7);

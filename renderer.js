@@ -27,7 +27,7 @@ let currentQuery = "";
 const FAVORITES_KEY = "weatherapp.favs";
 let favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
 
-// --- Helpers ---
+// Helpers 
 function showError(msg) {
   errorEl.textContent = msg;
   errorEl.classList.remove("hidden");
@@ -243,4 +243,13 @@ renderFavs();
 window.addEventListener("DOMContentLoaded", () => {
   if (favorites.length > 0) fetchAndRender(favorites[0]);
   else getLocationAndFetch();
+});
+
+//  OPEN MAIN WINDOW WHEN WIDGET CLICKED 
+const { ipcRenderer } = require("electron");
+
+// Use the whole widget container as clickable
+const container = document.querySelector(".widget-container");
+container.addEventListener("click", () => {
+  ipcRenderer.send("widget-clicked");
 });
